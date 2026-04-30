@@ -18,18 +18,24 @@ import { VideosComponent } from './pages/ui-elements/videos/videos.component';
 import { SignInComponent } from './pages/auth-pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/auth-pages/sign-up/sign-up.component';
 import { CalenderComponent } from './pages/calender/calender.component';
+import { LandingComponent } from './pages/landing/landing.component';
 
 export const routes: Routes = [
   {
-    path:'',
-    component:AppLayoutComponent,
-    children:[
+    path: '',
+    component: LandingComponent,
+    pathMatch: 'full',
+    title: 'My Teacher | Learn with confidence',
+  },
+  {
+    path: 'dashboard',
+    component: AppLayoutComponent,
+    children: [
       {
         path: '',
         component: EcommerceComponent,
         pathMatch: 'full',
-        title:
-          'My Teacher | Dashboard',
+        title: 'My Teacher | Dashboard',
       },
       {
         path:'calendar',

@@ -1,10 +1,12 @@
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LabelComponent } from '../../form/label/label.component';
 import { CheckboxComponent } from '../../form/input/checkbox.component';
 import { InputFieldComponent } from '../../form/input/input-field.component';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -14,15 +16,21 @@ import { FormsModule } from '@angular/forms';
     CheckboxComponent,
     InputFieldComponent,
     RouterModule,
-    FormsModule
+    FormsModule,
+    CommonModule
 ],
   templateUrl: './signup-form.component.html',
   styles: ``
 })
 export class SignupFormComponent {
 
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   showPassword = false;
   isChecked = false;
+  isLoading = false;
+  errorMessage = '';
 
   fname = '';
   lname = '';
@@ -33,11 +41,35 @@ export class SignupFormComponent {
     this.showPassword = !this.showPassword;
   }
 
-  onSignIn() {
-    console.log('First Name:', this.fname);
-    console.log('Last Name:', this.lname);
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
-    console.log('Remember Me:', this.isChecked);
+  onSignUp() {
+    if (!this.fname || !this.lname || !this.email || !this.password) {
+      this.errorMessage = 'Please fill in all fields';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.authService.signUp({
+      firstName: this.fname,
+      lastName: this.lname,
+      email: this.email,
+      password: this.password
+    }).subscribe({
+      next: (response) => {
+        console.log('Sign up successful:', response);
+        // Store token if provided
+        if (response.token) {
+          this.authService.setToken(response.token);
+        }
+        // Navigate to dashboard
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        console.error('Sign up error:', error);
+        this.errorMessage = error.message || 'Sign up failed. Please try again.';
+        this.isLoading = false;
+      }
+    });
   }
 }
