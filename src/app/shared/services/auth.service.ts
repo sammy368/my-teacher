@@ -22,6 +22,7 @@ export interface AuthResponse {
   message: string;
   data?: any;
   token?: string;
+  user?: any;
 }
 
 @Injectable({
@@ -69,6 +70,15 @@ export class AuthService {
     localStorage.setItem('authToken', token);
   }
 
+  setUserData(user: any): void {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  getUserData(): any {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
+
   getToken(): string | null {
     return localStorage.getItem('authToken');
   }
@@ -83,6 +93,7 @@ export class AuthService {
 
   logout(): void {
     this.removeToken();
+    this.setUserData(null);
     this.router.navigate(['/']);
   }
 }

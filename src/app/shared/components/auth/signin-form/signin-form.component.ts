@@ -59,6 +59,10 @@ export class SigninFormComponent {
         if (response.token) {
           this.authService.setToken(response.token);
         }
+        if (response?.user) {
+          console.log('User data from response:', response.user);
+          this.authService.setUserData(response.user);
+        }
         // Navigate to dashboard
         this.router.navigate(['/dashboard']);
       },
