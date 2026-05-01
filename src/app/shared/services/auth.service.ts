@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 export interface SignInRequest {
   email: string;
   password: string;
+  role?: string;
 }
 
 export interface SignUpRequest {
@@ -15,6 +16,7 @@ export interface SignUpRequest {
   lastName: string;
   email: string;
   password: string;
+  role: string;
 }
 
 export interface AuthResponse {

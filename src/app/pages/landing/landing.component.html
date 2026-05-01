@@ -22,12 +22,19 @@
           </div>
 
           <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <a routerLink="/signup" class="inline-flex items-center justify-center rounded-full bg-brand-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-400">
-              Start learning now
-            </a>
-            <a routerLink="/signin" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:border-brand-300 hover:bg-white/10">
-              Sign in to your account
-            </a>
+            <ng-container *ngIf="isAuthenticated; else guestCtas">
+              <a routerLink="/dashboard" class="inline-flex items-center justify-center rounded-full bg-brand-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-400">
+                Go to dashboard
+              </a>
+            </ng-container>
+            <ng-template #guestCtas>
+              <a routerLink="/signup" class="inline-flex items-center justify-center rounded-full bg-brand-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-400">
+                Start learning now
+              </a>
+              <a routerLink="/signin" class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:border-brand-300 hover:bg-white/10">
+                Sign in to your account
+              </a>
+            </ng-template>
           </div>
 
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -119,8 +126,11 @@
       </div>
       <div class="grid gap-4 sm:grid-cols-3">
         <a routerLink="/" class="text-sm hover:text-white">Home</a>
-        <a routerLink="/signin" class="text-sm hover:text-white">Sign In</a>
-        <a routerLink="/signup" class="text-sm hover:text-white">Sign Up</a>
+        <a *ngIf="isAuthenticated; else authLinks" routerLink="/dashboard" class="text-sm hover:text-white">Dashboard</a>
+        <ng-template #authLinks>
+          <a routerLink="/signin" class="text-sm hover:text-white">Sign In</a>
+          <a routerLink="/signup" class="text-sm hover:text-white">Sign Up</a>
+        </ng-template>
       </div>
     </div>
   </footer>

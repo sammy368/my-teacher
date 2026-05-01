@@ -36,13 +36,15 @@ export class SignupFormComponent {
   lname = '';
   email = '';
   password = '';
+  role = 'Teacher';
+  roleOptions = ['Teacher', 'Student'];
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
 
   onSignUp() {
-    if (!this.fname || !this.lname || !this.email || !this.password) {
+    if (!this.fname || !this.lname || !this.email || !this.password || !this.role) {
       this.errorMessage = 'Please fill in all fields';
       return;
     }
@@ -54,7 +56,8 @@ export class SignupFormComponent {
       firstName: this.fname,
       lastName: this.lname,
       email: this.email,
-      password: this.password
+      password: this.password,
+      role: this.role
     }).subscribe({
       next: (response) => {
         console.log('Sign up successful:', response);

@@ -35,6 +35,8 @@ export class SigninFormComponent {
 
   email = '';
   password = '';
+  role = 'Teacher';
+  roleOptions = ['Teacher', 'Student', 'Admin'];
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
@@ -42,17 +44,17 @@ export class SigninFormComponent {
 
   onSignIn() {
     console.log('Sign in button clicked');
-    if (!this.email || !this.password) {
+    if (!this.email || !this.password || !this.role) {
       this.errorMessage = 'Please fill in all fields';
-      console.warn('Form validation failed:', { email: this.email, password: this.password });
+      console.warn('Form validation failed:', { email: this.email, password: this.password, role: this.role });
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
 
-    console.log('Calling signIn API with:', { email: this.email });
-    this.authService.signIn({ email: this.email, password: this.password }).subscribe({
+    console.log('Calling signIn API with:', { email: this.email, role: this.role });
+    this.authService.signIn({ email: this.email, password: this.password, role: this.role }).subscribe({
       next: (response) => {
         console.log('Sign in successful:', response);
         // Store token if provided

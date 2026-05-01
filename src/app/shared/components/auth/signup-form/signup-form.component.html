@@ -94,6 +94,23 @@
           </app-label>
           <app-input-field type="email" [(value)]="email" id="email" name="email" placeholder="Enter your email" required />
         </div>
+        <div>
+          <app-label>
+            Role <span class="text-error-500">*</span>
+          </app-label>
+          <div class="grid gap-3 mt-2 sm:grid-cols-2">
+            <label *ngFor="let roleOption of roleOptions" class="flex items-center gap-3 px-4 py-3 border rounded-lg cursor-pointer text-sm text-gray-700 bg-white dark:bg-gray-900 dark:text-white hover:border-brand-500">
+              <input
+                type="radio"
+                [(ngModel)]="role"
+                [value]="roleOption"
+                name="role"
+                class="w-4 h-4 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
+              />
+              <span>{{ roleOption }}</span>
+            </label>
+          </div>
+        </div>
         <!-- Password -->
         <div>
           <app-label>Password <span class="text-error-500">*</span></app-label>
@@ -155,13 +172,13 @@
       </div>
     </form>
 
-    <div class="mt-5">
+    <!-- <div class="mt-5">
       <p class="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
         Don't have an account?
         <a routerLink="/signup" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">
           Sign Up
         </a>
       </p>
-    </div>
+    </div> -->
   </div>
 </div>
