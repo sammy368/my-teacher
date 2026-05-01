@@ -65,6 +65,9 @@ export class SignupFormComponent {
         if (response.token) {
           this.authService.setToken(response.token);
         }
+        if (response?.user) {
+          this.authService.setUserData(response.user);
+        }
         // Navigate to dashboard
         this.router.navigate(['/dashboard']);
       },
