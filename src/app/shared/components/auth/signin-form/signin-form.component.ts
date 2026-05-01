@@ -57,15 +57,14 @@ export class SigninFormComponent {
     this.authService.signIn({ email: this.email, password: this.password, role: this.role }).subscribe({
       next: (response) => {
         console.log('Sign in successful:', response);
-        // Store token if provided
         if (response.token) {
           this.authService.setToken(response.token);
         }
-        if (response?.user) {
-          console.log('User data from response:', response.user);
-          this.authService.setUserData(response.user);
+        const userData = response.user ?? response.data?.user ?? response.data ?? null;
+        if (userData) {
+          console.log('User data from response:', userData);
+          this.authService.setUserData(userData);
         }
-        // Navigate to dashboard
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {

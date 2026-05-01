@@ -61,14 +61,13 @@ export class SignupFormComponent {
     }).subscribe({
       next: (response) => {
         console.log('Sign up successful:', response);
-        // Store token if provided
         if (response.token) {
           this.authService.setToken(response.token);
         }
-        if (response?.user) {
-          this.authService.setUserData(response.user);
+        const userData = response.user ?? response.data?.user ?? response.data ?? null;
+        if (userData) {
+          this.authService.setUserData(userData);
         }
-        // Navigate to dashboard
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {

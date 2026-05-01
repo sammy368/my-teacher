@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, QueryList, ViewChildren, ChangeDetectorRef } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
+import { AuthService } from '../../services/auth.service';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { SafeHtmlPipe } from '../../pipe/safe-html.pipe';
 import { SidebarWidgetComponent } from './app-sidebar-widget.component';
@@ -109,6 +110,7 @@ export class AppSidebarComponent {
 
   constructor(
     public sidebarService: SidebarService,
+    private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
@@ -211,6 +213,10 @@ export class AppSidebarComponent {
         }
       });
     });
+  }
+
+get isAdmin(): boolean {
+    return this.authService.getUserRole()?.toLowerCase() === 'admin';
   }
 
   onSubmenuClick() {

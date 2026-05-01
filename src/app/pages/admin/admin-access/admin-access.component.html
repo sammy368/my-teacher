@@ -1,0 +1,62 @@
+<div class="p-6 mx-auto max-w-6xl">
+  <div class="mb-6">
+    <p class="mb-2 text-xs uppercase tracking-[0.3em] text-brand-300">Admin only</p>
+    <h1 class="text-3xl font-semibold text-gray-900 dark:text-white">Role access settings</h1>
+    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+      Choose which pages Teacher and Student roles are allowed to access.
+    </p>
+  </div>
+
+  <div *ngIf="savedMessage" class="p-4 mb-6 text-sm text-green-700 bg-green-100 border border-green-200 rounded-lg dark:bg-green-900/20 dark:text-green-200">
+    {{ savedMessage }}
+  </div>
+
+  <form (ngSubmit)="savePermissions()" class="space-y-6">
+    <div class="grid gap-4 sm:grid-cols-3">
+      <div class="sm:col-span-1">
+        <p class="text-sm font-semibold text-gray-700 dark:text-white">Page</p>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-700 dark:text-white">Teacher</p>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-700 dark:text-white">Student</p>
+      </div>
+    </div>
+
+    <div *ngFor="let page of availablePages" class="grid items-center gap-4 px-4 py-3 border rounded-lg sm:grid-cols-3">
+      <div>
+        <p class="font-medium text-gray-800 dark:text-gray-100">{{ page.label }}</p>
+      </div>
+      <div>
+        <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+          <input
+            type="checkbox"
+            [(ngModel)]="teacherPermissions[page.key]"
+            name="teacher_{{ page.key }}"
+            class="w-4 h-4 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
+          />
+          Allow
+        </label>
+      </div>
+      <div>
+        <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+          <input
+            type="checkbox"
+            [(ngModel)]="studentPermissions[page.key]"
+            name="student_{{ page.key }}"
+            class="w-4 h-4 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
+          />
+          Allow
+        </label>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="inline-flex items-center justify-center px-5 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600"
+    >
+      Save permissions
+    </button>
+  </form>
+</div>

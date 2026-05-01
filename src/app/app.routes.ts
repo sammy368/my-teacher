@@ -19,6 +19,8 @@ import { SignInComponent } from './pages/auth-pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/auth-pages/sign-up/sign-up.component';
 import { CalenderComponent } from './pages/calender/calender.component';
 import { LandingComponent } from './pages/landing/landing.component';
+import { AdminAccessComponent } from './pages/admin/admin-access/admin-access.component';
+import { RoleGuard } from './shared/services/role.guard';
 
 export const routes: Routes = [
   {
@@ -30,84 +32,107 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: AppLayoutComponent,
+    canActivate: [RoleGuard],
+    canActivateChild: [RoleGuard],
     children: [
       {
         path: '',
         component: EcommerceComponent,
         pathMatch: 'full',
         title: 'My Teacher | Dashboard',
+        data: { pageKey: 'dashboard' }
       },
       {
         path:'calendar',
         component:CalenderComponent,
-        title:'My Teacher | Calendar'
+        title:'My Teacher | Calendar',
+        data: { pageKey: 'calendar' }
       },
       {
         path:'profile',
         component:ProfileComponent,
-        title:'My Teacher | Profile'
+        title:'My Teacher | Profile',
+        data: { pageKey: 'profile' }
       },
       {
         path:'form-elements',
         component:FormElementsComponent,
-        title:'My Teacher | Form Elements'
+        title:'My Teacher | Form Elements',
+        data: { pageKey: 'form-elements' }
       },
       {
         path:'basic-tables',
         component:BasicTablesComponent,
-        title:'My Teacher | Basic Tables'
+        title:'My Teacher | Basic Tables',
+        data: { pageKey: 'basic-tables' }
       },
       {
         path:'blank',
         component:BlankComponent,
-        title:'My Teacher | Blank'
+        title:'My Teacher | Blank',
+        data: { pageKey: 'blank' }
       },
       // support tickets
       {
         path:'invoice',
         component:InvoicesComponent,
-        title:'My Teacher | Invoice'
+        title:'My Teacher | Invoice',
+        data: { pageKey: 'invoice' }
       },
       {
         path:'line-chart',
         component:LineChartComponent,
-        title:'My Teacher | Line Chart'
+        title:'My Teacher | Line Chart',
+        data: { pageKey: 'line-chart' }
       },
       {
         path:'bar-chart',
         component:BarChartComponent,
-        title:'My Teacher | Bar Chart'
+        title:'My Teacher | Bar Chart',
+        data: { pageKey: 'bar-chart' }
       },
       {
         path:'alerts',
         component:AlertsComponent,
-        title:'My Teacher | Alerts'
+        title:'My Teacher | Alerts',
+        data: { pageKey: 'alerts' }
       },
       {
         path:'avatars',
         component:AvatarElementComponent,
-        title:'My Teacher | Avatars'
+        title:'My Teacher | Avatars',
+        data: { pageKey: 'avatars' }
       },
       {
         path:'badge',
         component:BadgesComponent,
-        title:'My Teacher | Badges'
+        title:'My Teacher | Badges',
+        data: { pageKey: 'badge' }
       },
       {
         path:'buttons',
         component:ButtonsComponent,
-        title:'My Teacher | Buttons'
+        title:'My Teacher | Buttons',
+        data: { pageKey: 'buttons' }
       },
       {
         path:'images',
         component:ImagesComponent,
-        title:'My Teacher | Images'
+        title:'My Teacher | Images',
+        data: { pageKey: 'images' }
       },
       {
         path:'videos',
         component:VideosComponent,
-        title:'My Teacher | Videos'
+        title:'My Teacher | Videos',
+        data: { pageKey: 'videos' }
       },
+      {
+        path:'admin-access',
+        component: AdminAccessComponent,
+        title: 'My Teacher | Admin Role Access',
+        data: { roles: ['Admin'] }
+      }
     ]
   },
   // auth pages

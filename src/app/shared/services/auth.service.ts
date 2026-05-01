@@ -27,6 +27,14 @@ export interface AuthResponse {
   user?: any;
 }
 
+export interface UserData {
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  role: string;
+  [key: string]: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -72,13 +80,47 @@ export class AuthService {
     localStorage.setItem('authToken', token);
   }
 
+  private normalizeRole(role: string): string {
+    if (!role) {
+      return role;
+    }
+    const normalized = role.trim().toLowerCase();
+    if (normalized === 'admin') {
+      return 'Admin';
+    }
+    if (normalized === 'teacher') {
+      return 'Teacher';
+    }
+    if (normalized === 'student') {
+      return 'Student';
+    }
+    return role;
+  }
+
   setUserData(user: any): void {
+    if (user === null) {
+      localStorage.removeItem('user');
+      return;
+    }
+
+    if (user.role) {
+      user.role = this.normalizeRole(user.role);
+    }
+
     localStorage.setItem('user', JSON.stringify(user));
   }
 
-  getUserData(): any {
+  getUserData(): UserData | null {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
+  }
+
+  getUserRole(): string | null {
+    const user = this.getUserData();
+    if (!user?.role) {
+      return null;
+    }
+    return this.normalizeRole(user.role);
   }
 
   getToken(): string | null {
