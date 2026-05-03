@@ -1,6 +1,7 @@
 import {
   Component, Input, OnInit, OnDestroy,
-  ViewChild, ElementRef, OnChanges
+  ViewChild, ElementRef, OnChanges,
+  SimpleChange, SimpleChanges
 } from '@angular/core';
 import {
   Participant, Track, LocalParticipant, RemoteParticipant
@@ -62,9 +63,11 @@ export class ParticipantTileComponent implements OnInit, OnDestroy, OnChanges {
     this.attachTracks();
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     // Re-attach if participant reference updates
-    this.attachTracks();
+    if (changes['participant']) {
+      this.attachTracks();
+    }
   }
 
   private attachTracks() {
