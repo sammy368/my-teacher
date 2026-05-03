@@ -16,7 +16,7 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LiveKitService {
-  private room = new Room({
+  room = new Room({
     adaptiveStream: true,   // auto-adjust quality based on bandwidth
     dynacast: true,         // save bandwidth when video not visible
   });
