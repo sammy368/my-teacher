@@ -21,6 +21,7 @@ import { CalenderComponent } from './pages/calender/calender.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { AdminAccessComponent } from './pages/admin/admin-access/admin-access.component';
 import { RoleGuard } from './shared/services/role.guard';
+import { ClassroomPage } from './pages/classroom/classroom.component';
 
 export const routes: Routes = [
   {
@@ -32,8 +33,8 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: AppLayoutComponent,
-    canActivate: [RoleGuard],
-    canActivateChild: [RoleGuard],
+    // canActivate: [RoleGuard],
+    // canActivateChild: [RoleGuard],
     children: [
       {
         path: '',
@@ -41,6 +42,12 @@ export const routes: Routes = [
         pathMatch: 'full',
         title: 'My Teacher | Dashboard',
         data: { pageKey: 'dashboard' }
+      },
+      { 
+        path: 'classroom/:roomName', 
+        component: ClassroomPage,
+        title: 'My Teacher | Classroom',
+        data: { pageKey: 'classroom' } 
       },
       {
         path:'calendar',

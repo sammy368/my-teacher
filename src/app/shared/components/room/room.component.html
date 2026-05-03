@@ -1,0 +1,35 @@
+<div class="room-wrapper">
+
+      <!-- Connecting state -->
+      <div *ngIf="(lk.connectionState$ | async) === 'connecting'" class="status">
+        Connecting...
+      </div>
+
+      <!-- Connected: participant grid -->
+      <ng-container *ngIf="(lk.connectionState$ | async) === 'connected'">
+
+        <div class="participants-grid">
+          <app-participant-tile
+            *ngFor="let p of lk.participants$ | async; trackBy: trackParticipant"
+            [participant]="p">
+          </app-participant-tile>
+        </div>
+
+        <!-- Controls bar -->
+        <div class="controls-bar">
+          <button (click)="lk.toggleMic()" [class.off]="!(lk.isMicEnabled$ | async)">
+            {{ (lk.isMicEnabled$ | async) ? '🎙️ Mute' : '🔇 Unmute' }}
+          </button>
+
+          <button (click)="lk.toggleCamera()" [class.off]="!(lk.isCameraEnabled$ | async)">
+            {{ (lk.isCameraEnabled$ | async) ? '📷 Stop Camera' : '📵 Start Camera' }}
+          </button>
+
+          <button (click)="leave()" class="leave-btn">
+            🚪 Leave
+          </button>
+        </div>
+
+      </ng-container>
+
+    </div>

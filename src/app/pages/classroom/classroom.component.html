@@ -1,0 +1,36 @@
+<!-- Loading -->
+@if (isLoading) {
+  <div class="loading">
+    <p>Connecting to classroom...</p>
+  </div>
+}
+
+<!-- Error -->
+@if (error) {
+  <div class="error">
+    <p>{{ error }}</p>
+    <button routerLink="/">Go Back</button>
+  </div>
+}
+
+<!-- Room (once connected) -->
+@if (!isLoading && !error) {
+  <!-- Share bar (visible to teacher) -->
+  <div class="flex items-center gap-3 px-4 py-2 bg-gray-800 border-b border-gray-700">
+    <span class="text-gray-400 text-sm">Invite students:</span>
+    <input
+      [value]="shareLink"
+      readonly
+      class="flex-1 bg-gray-700 text-white text-sm px-3 py-1.5 rounded border border-gray-600 cursor-pointer"
+      (click)="copyLink()"
+    />
+    <button
+      (click)="copyLink()"
+      class="px-3 py-1.5 text-sm rounded"
+      [class]="linkCopied ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'"
+    >
+      {{ linkCopied ? '✅ Copied!' : '🔗 Copy Link' }}
+    </button>
+  </div>
+  <app-room class="flex-1"></app-room>
+}
