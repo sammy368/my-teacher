@@ -36,7 +36,7 @@ export class ClassroomPage implements OnInit {
 
     // Build the share link for students
     const base = window.location.origin;
-    this.shareLink = `${base}/classroom/${this.roomName}?role=student`;
+    this.shareLink = `${base}/dashboard/classroom/${this.roomName}?role=student`;
 
     try {
       if (!this.roomName) {
