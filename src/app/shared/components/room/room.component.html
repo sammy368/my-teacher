@@ -1,35 +1,52 @@
 <div class="room-wrapper">
 
       <!-- Connecting state -->
-      <div *ngIf="(lk.connectionState$ | async) === 'connecting'" class="status">
-        Connecting...
-      </div>
+      @if ((lk.connectionState$ | async) === 'disconnected') {
+        <div class="status">
+          Disconnected. Please refresh to join again.
+        </div>
+      }
+
+      @if ((lk.connectionState$ | async) === 'connecting') {
+         <div class="status">
+          Connecting...
+        </div>
+      }
 
       <!-- Connected: participant grid -->
-      <ng-container *ngIf="(lk.connectionState$ | async) === 'connected'">
+      @if ((lk.connectionState$ | async) === 'connected') {
+        <ng-container>
 
-        <div class="participants-grid">
-          <app-participant-tile
-            *ngFor="let p of lk.participants$ | async; trackBy: trackParticipant"
-            [participant]="p">
-          </app-participant-tile>
-        </div>
-
-        <!-- Controls bar -->
-        <div class="controls-bar">
-          <button (click)="lk.toggleMic()" [class.off]="!(lk.isMicEnabled$ | async)">
-            {{ (lk.isMicEnabled$ | async) ? '🎙️ Mute' : '🔇 Unmute' }}
-          </button>
-
-          <button (click)="lk.toggleCamera()" [class.off]="!(lk.isCameraEnabled$ | async)">
-            {{ (lk.isCameraEnabled$ | async) ? '📷 Stop Camera' : '📵 Start Camera' }}
-          </button>
-
-          <button (click)="leave()" class="leave-btn">
-            🚪 Leave
-          </button>
-        </div>
-
-      </ng-container>
+          @if (showAudioPrompt) {
+            <div class="bg-yellow-500 text-black text-center py-2 cursor-pointer"
+                (click)="startAudio()">
+              🔇 Click here to enable audio
+            </div>
+          }
+  
+          <div class="participants-grid">
+            <app-participant-tile
+              *ngFor="let p of lk.participants$ | async; trackBy: trackParticipant"
+              [participant]="p">
+            </app-participant-tile>
+          </div>
+  
+          <!-- Controls bar -->
+          <div class="controls-bar">
+            <button (click)="lk.toggleMic()" [class.off]="!(lk.isMicEnabled$ | async)">
+              {{ (lk.isMicEnabled$ | async) ? '🎙️ Mute' : '🔇 Unmute' }}
+            </button>
+  
+            <button (click)="lk.toggleCamera()" [class.off]="!(lk.isCameraEnabled$ | async)">
+              {{ (lk.isCameraEnabled$ | async) ? '📷 Stop Camera' : '📵 Start Camera' }}
+            </button>
+  
+            <button (click)="leave()" class="leave-btn">
+              🚪 Leave
+            </button>
+          </div>
+  
+        </ng-container>
+      }
 
     </div>

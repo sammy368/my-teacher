@@ -35,6 +35,10 @@ export class LiveKitService {
 
   async connect(wsUrl: string, token: string) {
     await this.room.connect(wsUrl, token);
+
+    // Start audio playback — must be called after a user interaction
+    await this.room.startAudio();
+
     this.updateParticipants();
   }
 

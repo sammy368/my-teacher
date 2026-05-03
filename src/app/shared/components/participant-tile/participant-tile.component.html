@@ -1,1 +1,33 @@
-<p>participant-tile works!</p>
+<div
+  class="relative bg-gray-800 rounded-xl overflow-hidden"
+  style="aspect-ratio: 16/9"
+>
+  <video
+    #videoEl
+    autoplay
+    playsinline
+    [muted]="isLocal"
+    class="w-full h-full object-cover"
+  ></video>
+
+  <!-- Audio element for remote participants only -->
+  <audio #audioEl autoplay [muted]="isLocal"></audio>
+
+  @if (!cameraEnabled) {
+    <div class="absolute inset-0 flex items-center justify-center bg-gray-700 text-white text-5xl">
+      {{ participant?.identity?.[0]?.toUpperCase() }}
+    </div>
+  }
+
+  <div
+    class="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1"
+  >
+    <span>{{ participant?.identity }}</span>
+    @if (isLocal) {
+        <span> (You)</span>
+    }
+    @if (!micEnabled) {
+        <span>🔇</span>
+    }
+  </div>
+</div>

@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import {
   Participant, Track, LocalParticipant,
-  RoomEvent, RemoteTrackPublication, RemoteParticipant
+  RoomEvent, RemoteParticipant
 } from 'livekit-client';
 import { CommonModule } from '@angular/common';
 import { LiveKitService } from '../../../shared/services/livekit.service';
@@ -13,39 +13,24 @@ import { LiveKitService } from '../../../shared/services/livekit.service';
   selector: 'app-participant-tile',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="relative bg-gray-800 rounded-xl overflow-hidden"
-         style="aspect-ratio: 16/9">
-
-      <video #videoEl autoplay playsinline
-        [muted]="isLocal"
-        class="w-full h-full object-cover">
-      </video>
-
-      <div *ngIf="!cameraEnabled"
-           class="absolute inset-0 flex items-center justify-center
-                  bg-gray-700 text-white text-5xl">
-        {{ participant?.identity?.[0]?.toUpperCase() }}
-      </div>
-
-      <div class="absolute bottom-2 left-2 bg-black/60 text-white
-                  text-xs px-2 py-1 rounded-md flex items-center gap-1">
-        <span>{{ participant?.identity }}</span>
-        <span *ngIf="isLocal"> (You)</span>
-        <span *ngIf="!micEnabled">🔇</span>
-      </div>
-
-    </div>
-  `
+  templateUrl: './participant-tile.component.html', 
 })
 export class ParticipantTileComponent implements OnInit, OnDestroy {
   @Input() participant!: Participant;
   @ViewChild('videoEl', { static: true }) videoEl!: ElementRef<HTMLVideoElement>;
+  @ViewChild('audioEl', { static: true }) audioEl!: ElementRef<HTMLAudioElement>;
 
   cameraEnabled = false;
   micEnabled = false;
 
-  // Store handlers so we can remove them later
+  get isLocal() {
+    return this.participant instanceof LocalParticipant;
+  }
+
+  constructor(private lk: LiveKitService) {}
+
+  // ── Stored handlers ──────────────────────────────────────────────────────────
+
   private onTrackSubscribed = (track: any, pub: any, participant: RemoteParticipant) => {
     if (participant.identity === this.participant.identity) {
       this.attachTracks();
@@ -76,11 +61,7 @@ export class ParticipantTileComponent implements OnInit, OnDestroy {
     }
   };
 
-  get isLocal() {
-    return this.participant instanceof LocalParticipant;
-  }
-
-  constructor(private lk: LiveKitService) {}
+  // ── Lifecycle ────────────────────────────────────────────────────────────────
 
   ngOnInit() {
     this.attachTracks();
@@ -88,16 +69,10 @@ export class ParticipantTileComponent implements OnInit, OnDestroy {
   }
 
   private registerEvents() {
-    // Listen to room-level track events and re-attach
-    // when the event is for THIS participant
     this.lk.room.on(RoomEvent.TrackSubscribed, this.onTrackSubscribed);
-
     this.lk.room.on(RoomEvent.TrackUnsubscribed, this.onTrackUnsubscribed);
-
     this.lk.room.on(RoomEvent.LocalTrackPublished, this.onLocalTrackPublished);
-
     this.lk.room.on(RoomEvent.TrackMuted, this.onTrackMuted);
-
     this.lk.room.on(RoomEvent.TrackUnmuted, this.onTrackUnmuted);
   }
 
@@ -105,17 +80,23 @@ export class ParticipantTileComponent implements OnInit, OnDestroy {
     if (!this.participant || !this.videoEl) return;
 
     const videoEl = this.videoEl.nativeElement;
+    const audioEl = this.audioEl.nativeElement;
 
-    // Camera
+    // ── Camera ───────────────────────────────────────────────────────────────
     const cameraPub = this.participant.getTrackPublication(Track.Source.Camera);
     this.cameraEnabled = cameraPub?.isEnabled ?? false;
     if (cameraPub?.track) {
       cameraPub.track.attach(videoEl);
     }
 
-    // Mic state
+    // ── Microphone ───────────────────────────────────────────────────────────
     const micPub = this.participant.getTrackPublication(Track.Source.Microphone);
     this.micEnabled = micPub?.isEnabled ?? false;
+    if (micPub?.track && !this.isLocal) {
+      // Only attach audio for remote participants
+      // attaching local audio causes echo
+      micPub.track.attach(audioEl);
+    }
   }
 
   private updateTrackStates() {
@@ -127,15 +108,17 @@ export class ParticipantTileComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Remove all listeners added by this tile
     this.lk.room.off(RoomEvent.TrackSubscribed, this.onTrackSubscribed);
     this.lk.room.off(RoomEvent.TrackUnsubscribed, this.onTrackUnsubscribed);
     this.lk.room.off(RoomEvent.LocalTrackPublished, this.onLocalTrackPublished);
     this.lk.room.off(RoomEvent.TrackMuted, this.onTrackMuted);
     this.lk.room.off(RoomEvent.TrackUnmuted, this.onTrackUnmuted);
 
-    // Detach video
+    // Detach both video and audio
     const cameraPub = this.participant?.getTrackPublication(Track.Source.Camera);
     cameraPub?.track?.detach(this.videoEl.nativeElement);
+
+    const micPub = this.participant?.getTrackPublication(Track.Source.Microphone);
+    micPub?.track?.detach(this.audioEl.nativeElement);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConnectionState, Participant } from 'livekit-client';
+import { ConnectionState, Participant, RoomEvent } from 'livekit-client';
 import { LiveKitService } from '../../services/livekit.service';
 import { SessionService } from '../../services/session.service';
 import { ParticipantTileComponent } from '../participant-tile/participant-tile.component';
@@ -33,10 +33,16 @@ export class RoomComponent implements OnInit, OnDestroy {
   @Input() userName!: string;
   @Input() role: 'teacher' | 'student' = 'student';
 
+  showAudioPrompt = false;
+
   constructor(
     public lk: LiveKitService,
     private session: SessionService
   ) {}
+
+  async startAudio() {
+    await this.lk.room.startAudio();
+  }
 
   async ngOnInit() {
     // 1. Get token from your NestJS backend
@@ -54,6 +60,10 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     // 2. Connect to LiveKit Cloud
     await this.lk.connect(wsUrl, token);
+
+    this.lk.room.on(RoomEvent.AudioPlaybackStatusChanged, () => {
+      this.showAudioPrompt = !this.lk.room.canPlaybackAudio;
+    });
 
     // 3. Auto-enable camera + mic on join
     await this.lk.enableCamera();
