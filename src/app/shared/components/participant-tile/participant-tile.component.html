@@ -14,20 +14,22 @@
   <audio #audioEl autoplay [muted]="isLocal"></audio>
 
   @if (!cameraEnabled) {
-    <div class="absolute inset-0 flex items-center justify-center bg-gray-700 text-white text-5xl">
-      {{ participant?.identity?.[0]?.toUpperCase() }}
+    <div
+      class="absolute inset-0 flex items-center justify-center bg-gray-700 text-white text-5xl"
+    >
+      {{ participantIdentity }}
     </div>
   }
 
   <div
     class="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1"
   >
-    <span>{{ participant?.identity }}</span>
+    <span>{{ participantIdentity }}</span>
     @if (isLocal) {
-        <span> (You)</span>
+      <span> (You)</span>
     }
     @if (!micEnabled) {
-        <span>🔇</span>
+      <span>🔇</span>
     }
   </div>
 </div>

@@ -1,12 +1,19 @@
+import { CommonModule } from '@angular/common';
 import {
-  Component, Input, OnInit, OnDestroy,
-  ViewChild, ElementRef
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {
-  Participant, Track, LocalParticipant,
-  RoomEvent, RemoteParticipant
+  LocalParticipant,
+  Participant,
+  RemoteParticipant,
+  RoomEvent,
+  Track
 } from 'livekit-client';
-import { CommonModule } from '@angular/common';
 import { LiveKitService } from '../../../shared/services/livekit.service';
 
 @Component({
@@ -60,6 +67,10 @@ export class ParticipantTileComponent implements OnInit, OnDestroy {
       this.updateTrackStates();
     }
   };
+
+  get participantIdentity() {
+    return Array.isArray(this.participant.identity) ? this.participant.identity[0]?.toUpperCase() : this.participant.identity;
+  }
 
   // ── Lifecycle ────────────────────────────────────────────────────────────────
 
